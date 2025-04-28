@@ -7,19 +7,45 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 const Nutrition = () => {
-  const { nutritionPartners } = useAppContext();
+  const partners = [
+    {
+      id: 1,
+      name: "Fresh & Fit",
+      description: "Подбор индивидуального питания с возможностью заказа готовых блюд. Наши эксперты помогут вам достичь ваших целей через правильное питание.",
+      logoUrl: "/nutrition-logo.svg",
+      websiteUrl: "#"
+    },
+    {
+      id: 2,
+      name: "Скоро",
+      description: "Здесь будет информация о новом партнере",
+      logoUrl: "/placeholder.svg",
+      websiteUrl: "#"
+    },
+    {
+      id: 3,
+      name: "Скоро",
+      description: "Здесь будет информация о новом партнере",
+      logoUrl: "/placeholder.svg",
+      websiteUrl: "#"
+    }
+  ];
 
   return (
     <div className="pb-20">
       <Header title="Питание" subtitle="Наши партнеры помогут вам питаться правильно" />
       
       <div className="p-4">
-        {nutritionPartners.map((partner) => (
+        {partners.map((partner) => (
           <Card key={partner.id} className="mb-4">
             <CardContent className="p-4">
               <div className="flex items-center mb-4">
                 <div className="w-16 h-16 min-w-16 bg-gray-100 rounded-md overflow-hidden mr-4">
-                  <img src={partner.logoUrl} alt={partner.name} className="w-full h-full object-cover" />
+                  <img 
+                    src={partner.logoUrl} 
+                    alt={partner.name} 
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div>
                   <h3 className="text-lg font-medium">{partner.name}</h3>
@@ -32,7 +58,7 @@ const Nutrition = () => {
                 className="w-full bg-trainify-500 hover:bg-trainify-600"
                 onClick={() => window.open(partner.websiteUrl, '_blank')}
               >
-                Перейти на сайт <ExternalLink size={16} className="ml-2" />
+                Перейти на сайт <ExternalLink className="ml-2 h-4 w-4" />
               </Button>
             </CardContent>
           </Card>

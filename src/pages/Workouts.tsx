@@ -42,9 +42,16 @@ const Workouts = () => {
         <div className="grid gap-4">
           {workoutPlans.map((workout) => (
             <Card key={workout.id} className="overflow-hidden">
-              <div className="h-40 bg-gray-200">
+              <div className="h-40 bg-gray-100">
                 {workout.imageUrl && (
-                  <img src={workout.imageUrl} alt={workout.title} className="w-full h-full object-cover" />
+                  <img 
+                    src={workout.imageUrl} 
+                    alt={workout.title} 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = "/placeholder.svg";
+                    }}
+                  />
                 )}
               </div>
               <CardContent className="p-4">
