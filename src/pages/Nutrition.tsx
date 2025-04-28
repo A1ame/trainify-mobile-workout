@@ -12,7 +12,7 @@ const Nutrition = () => {
       id: 1,
       name: "Fresh & Fit",
       description: "Занимаются подбором питания с возможностью заказа.",
-      logoUrl: "/nutrition-logo.jpg",
+      logoUrl: "/nutrition-logo.png",
       websiteUrl: "#"
     },
     {
