@@ -98,48 +98,79 @@ const Profile = () => {
       <Header title="Профиль" />
       <div className="p-4 space-y-6">
         {userProfile && (
-          <Card>
-            <CardContent className="p-5">
-              <h3 className="text-lg font-medium mb-4">Основные показатели</h3>
-              
-              <div className="h-72 mb-4">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={healthData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {healthData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+          <>
+            {/* Main Indicators Card */}
+            <Card>
+              <CardContent className="p-5">
+                <h3 className="text-lg font-medium mb-4">Основные показатели</h3>
+                
+                <div className="h-72 mb-4">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={healthData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {healthData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
 
-              {/* Chart labels positioned below the chart */}
-              <div className="grid grid-cols-2 gap-4 mb-4 text-center">
-                <div>
-                  <p className="text-sm text-[#0088FE]">ИМТ</p>
-                  <p className="text-xl font-semibold">{calculateBMI()}</p>
-                  <p className="text-sm text-gray-500">{getBMICategory(parseFloat(calculateBMI()))}</p>
+                {/* Chart labels below the chart */}
+                <div className="grid grid-cols-2 gap-4 text-center">
+                  <div>
+                    <p className="text-sm text-[#0088FE]">ИМТ</p>
+                    <p className="text-xl font-semibold">{calculateBMI()}</p>
+                    <p className="text-sm text-gray-500">{getBMICategory(parseFloat(calculateBMI()))}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-[#00C49F]">Идеальный вес</p>
+                    <p className="text-xl font-semibold">{((userProfile.height - 100) * 0.9).toFixed(1)} кг</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-[#00C49F]">Идеальный вес</p>
-                  <p className="text-xl font-semibold">{((userProfile.height - 100) * 0.9).toFixed(1)} кг</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            {/* Weight Chart Card */}
+            {userProfile.weightHistory.length > 1 && (
+              <Card>
+                <CardContent className="p-5">
+                  <h3 className="text-lg font-medium mb-4">График веса</h3>
+                  <div className="h-72">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart
+                        data={formatChartData()}
+                        margin={{
+                          top: 10,
+                          right: 10,
+                          left: 0,
+                          bottom: 20
+                        }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" angle={-45} textAnchor="end" height={60} />
+                        <YAxis domain={['dataMin - 1', 'dataMax + 1']} />
+                        <Tooltip />
+                        <Line type="monotone" dataKey="weight" stroke="#0066ff" strokeWidth={2} dot={{ r: 4 }} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </>
         )}
 
-        {/* Always show the form */}
+        {/* Update Data Form */}
         <Card>
           <CardContent className="p-5">
             <h2 className="text-lg font-semibold mb-4">{userProfile ? 'Обновить данные' : 'Пожалуйста, заполните ваши данные'}</h2>
@@ -203,33 +234,6 @@ const Profile = () => {
             </form>
           </CardContent>
         </Card>
-
-        {userProfile && userProfile.weightHistory.length > 1 && (
-          <Card>
-            <CardContent className="p-5">
-              <h3 className="text-lg font-medium mb-4">График веса</h3>
-              <div className="h-72">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={formatChartData()}
-                    margin={{
-                      top: 10,
-                      right: 10,
-                      left: 0,
-                      bottom: 20
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" angle={-45} textAnchor="end" height={60} />
-                    <YAxis domain={['dataMin - 1', 'dataMax + 1']} />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="weight" stroke="#0066ff" strokeWidth={2} dot={{ r: 4 }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </div>
   );
