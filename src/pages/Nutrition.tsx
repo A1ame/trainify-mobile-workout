@@ -11,7 +11,7 @@ const Nutrition = () => {
     {
       id: 1,
       name: "Fresh & Fit",
-      description: "Подбор индивидуального питания с возможностью заказа готовых блюд. Наши эксперты помогут вам достичь ваших целей через правильное питание.",
+      description: "Занимаются подбором питания с возможностью заказа.",
       logoUrl: "/nutrition-logo.svg",
       websiteUrl: "#"
     },
@@ -44,7 +44,7 @@ const Nutrition = () => {
                   <img 
                     src={partner.logoUrl} 
                     alt={partner.name} 
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain p-2"
                   />
                 </div>
                 <div>

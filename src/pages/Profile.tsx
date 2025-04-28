@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
 import Header from '../components/Header';
@@ -25,7 +26,7 @@ const Profile = () => {
       setHeight(parsedProfile.height.toString());
       setWeight(parsedProfile.weight.toString());
       setAge(parsedProfile.age.toString());
-      setShowForm(false);
+      setShowForm(true); // Always show the form
     }
   }, []);
 
@@ -36,7 +37,6 @@ const Profile = () => {
       setWeight(userProfile.weight.toString());
       setAge(userProfile.age.toString());
       localStorage.setItem('userProfile', JSON.stringify(userProfile));
-      setShowForm(false);
     }
   }, [userProfile]);
 
@@ -77,7 +77,6 @@ const Profile = () => {
     
     updateUserProfile(updatedProfile);
     localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
-    setShowForm(false);
   };
 
   const formatChartData = () => {
@@ -98,22 +97,12 @@ const Profile = () => {
     <div className="pb-20">
       <Header title="Профиль" />
       <div className="p-4 space-y-6">
-        {!showForm && userProfile && (
+        {userProfile && (
           <Card>
             <CardContent className="p-5">
               <h3 className="text-lg font-medium mb-4">Основные показатели</h3>
-              <div className="grid grid-cols-2 gap-4 mb-4 text-center">
-                <div>
-                  <p className="text-sm text-gray-500">ИМТ</p>
-                  <p className="text-xl font-semibold">{calculateBMI()}</p>
-                  <p className="text-sm text-gray-500">{getBMICategory(parseFloat(calculateBMI()))}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Идеальный вес</p>
-                  <p className="text-xl font-semibold">{((userProfile.height - 100) * 0.9).toFixed(1)} кг</p>
-                </div>
-              </div>
-              <div className="h-72">
+              
+              <div className="h-72 mb-4">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -121,7 +110,6 @@ const Profile = () => {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, value }) => `${name}: ${value.toFixed(1)}`}
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
@@ -134,72 +122,111 @@ const Profile = () => {
                   </PieChart>
                 </ResponsiveContainer>
               </div>
+
+              {/* Chart labels positioned below the chart */}
+              <div className="grid grid-cols-2 gap-4 mb-4 text-center">
+                <div>
+                  <p className="text-sm text-[#0088FE]">ИМТ</p>
+                  <p className="text-xl font-semibold">{calculateBMI()}</p>
+                  <p className="text-sm text-gray-500">{getBMICategory(parseFloat(calculateBMI()))}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-[#00C49F]">Идеальный вес</p>
+                  <p className="text-xl font-semibold">{((userProfile.height - 100) * 0.9).toFixed(1)} кг</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}
 
-        {showForm && (
+        {/* Always show the form */}
+        <Card>
+          <CardContent className="p-5">
+            <h2 className="text-lg font-semibold mb-4">{userProfile ? 'Обновить данные' : 'Пожалуйста, заполните ваши данные'}</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="name">Имя</Label>
+                  <Input
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Введите ваше имя"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="height">Рост (см)</Label>
+                  <Input
+                    id="height"
+                    type="number"
+                    min="1"
+                    value={height}
+                    onChange={(e) => setHeight(e.target.value)}
+                    placeholder="Введите ваш рост"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="weight">Вес (кг)</Label>
+                  <Input
+                    id="weight"
+                    type="number"
+                    min="0.1"
+                    step="0.1"
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
+                    placeholder="Введите ваш вес"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="age">Возраст</Label>
+                  <Input
+                    id="age"
+                    type="number"
+                    min="1"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    placeholder="Введите ваш возраст"
+                    required
+                  />
+                </div>
+                
+                <Button type="submit" className="w-full bg-trainify-500 hover:bg-trainify-600">
+                  Сохранить
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+
+        {userProfile && userProfile.weightHistory.length > 1 && (
           <Card>
             <CardContent className="p-5">
-              <h2 className="text-lg font-semibold mb-4">Пожалуйста, заполните ваши данные</h2>
-              <form onSubmit={handleSubmit}>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="name">Имя</Label>
-                    <Input
-                      id="name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Введите ваше имя"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="height">Рост (см)</Label>
-                    <Input
-                      id="height"
-                      type="number"
-                      min="0"
-                      value={height}
-                      onChange={(e) => setHeight(e.target.value)}
-                      placeholder="Введите ваш рост"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="weight">Вес (кг)</Label>
-                    <Input
-                      id="weight"
-                      type="number"
-                      min="0"
-                      step="0.1"
-                      value={weight}
-                      onChange={(e) => setWeight(e.target.value)}
-                      placeholder="Введите ваш вес"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="age">Возраст</Label>
-                    <Input
-                      id="age"
-                      type="number"
-                      min="0"
-                      value={age}
-                      onChange={(e) => setAge(e.target.value)}
-                      placeholder="Введите ваш возраст"
-                      required
-                    />
-                  </div>
-                  
-                  <Button type="submit" className="w-full bg-trainify-500 hover:bg-trainify-600">
-                    Сохранить
-                  </Button>
-                </div>
-              </form>
+              <h3 className="text-lg font-medium mb-4">График веса</h3>
+              <div className="h-72">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={formatChartData()}
+                    margin={{
+                      top: 10,
+                      right: 10,
+                      left: 0,
+                      bottom: 20
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" angle={-45} textAnchor="end" height={60} />
+                    <YAxis domain={['dataMin - 1', 'dataMax + 1']} />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="weight" stroke="#0066ff" strokeWidth={2} dot={{ r: 4 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         )}
