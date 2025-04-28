@@ -6,7 +6,7 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/workouts");
+    navigate("/profile");
   }, [navigate]);
 
   return null;

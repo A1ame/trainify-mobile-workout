@@ -27,7 +27,7 @@ const App = () => (
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/nutrition" element={<Nutrition />} />
               <Route path="/workouts" element={<Workouts />} />
-              <Route path="/" element={<Workouts />} />
+              <Route path="/" element={<Profile />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <BottomNavigation />
