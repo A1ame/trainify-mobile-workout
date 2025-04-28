@@ -49,7 +49,7 @@ const Workouts = () => {
                     alt={workout.title} 
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      e.currentTarget.src = "/placeholder.svg";
+                      e.currentTarget.src = "/cardio.jpg";
                     }}
                   />
                 )}
